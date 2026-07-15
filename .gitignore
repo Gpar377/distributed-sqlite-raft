@@ -1,0 +1,22 @@
+# Compiled binaries and libraries
+build/
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.a
+
+# SQLite temporary and database files
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# IDE and System configurations
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
