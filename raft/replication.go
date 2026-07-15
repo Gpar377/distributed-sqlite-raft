@@ -150,7 +150,12 @@ func (n *Node) updateCommitIndex() {
 	}
 }
 
-// Dummy helper simulating network RPC calls
+// Dummy helper simulating network RPC calls via cluster registry
 func (n *Node) sendAppendEntries(address string, args AppendEntriesArgs, reply *AppendEntriesReply) error {
-	return nil
+	peerNode, err := GetNode(address)
+	if err != nil {
+		return err
+	}
+	return peerNode.AppendEntries(args, reply)
 }
+

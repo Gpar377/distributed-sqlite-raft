@@ -3,6 +3,7 @@ package raft
 import (
 	"log"
 	"math/rand"
+	"sync"
 	"time"
 )
 
@@ -116,11 +117,15 @@ func (n *Node) RequestVote(args RequestVoteArgs, reply *RequestVoteReply) error 
 	return nil
 }
 
-// Dummy helper simulating network RPC calls
+// Dummy helper simulating network RPC calls via cluster registry
 func (n *Node) sendRequestVote(address string, args RequestVoteArgs, reply *RequestVoteReply) error {
-	// Simulated direct call
-	return nil
+	peerNode, err := GetNode(address)
+	if err != nil {
+		return err
+	}
+	return peerNode.RequestVote(args, reply)
 }
+
 
 func (n *Node) initializeLeaderState() {
 	for peerID := range n.peers {

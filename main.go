@@ -26,6 +26,7 @@ func NewReplicatedStateMachine(nodeID string, address string, peers map[string]s
 	}
 
 	rNode := raft.NewNode(nodeID, address, peers)
+	raft.RegisterNode(address, rNode)
 
 	return &ReplicatedStateMachine{
 		nodeID:   nodeID,

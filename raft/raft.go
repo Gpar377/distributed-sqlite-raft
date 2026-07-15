@@ -62,3 +62,51 @@ func NewNode(nodeID string, address string, peers map[string]string) *Node {
 		heartbeatChan: make(chan bool, 10),
 	}
 }
+
+func (n *Node) GetRole() Role {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	return n.role
+}
+
+func (n *Node) GetHeartbeatChan() chan bool {
+	return n.heartbeatChan
+}
+
+func (n *Node) GetCommitIndex() int {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	return n.commitIndex
+}
+
+func (n *Node) GetLastApplied() int {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	return n.lastApplied
+}
+
+func (n *Node) SetLastApplied(idx int) {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	n.lastApplied = idx
+}
+
+func (n *Node) GetLog() []LogEntry {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	return n.log
+}
+
+// Propose appends write query statement to local logs as a leader
+func (n *Node) Propose(command string) {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	if n.role != Leader {
+		return
+	}
+	n.log = append(n.log, LogEntry{
+		Term:    n.currentTerm,
+		Command: command,
+	})
+}
+
